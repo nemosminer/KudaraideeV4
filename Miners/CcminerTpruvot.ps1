@@ -1,10 +1,12 @@
-$Path = '.\Bin\NVIDIA-TPruvot\ccminer.exe'
-$Uri = 'https://github.com/tpruvot/ccminer/releases/download/2.2.4-tpruvot/ccminer-x64-2.2.4-cuda9.7z'
+if (!(IsLoaded(".\Include.ps1"))) {. .\Include.ps1; RegisterLoaded(".\Include.ps1")}
+
+$Path = '.\Bin\NVIDIA-TPruvot\ccminer-x64.exe'
+$Uri = 'https://github.com/tpruvot/ccminer/releases/download/2.3-tpruvot/ccminer-2.3-cuda9.7z'
 
 
 $Commands = [PSCustomObject]@{
-    Lyra2z = ' --api-remote --api-allow=0/0'
-    #Cryptonight = ' --api-remote --api-allow=0/0'
+    Lyra2z = ' '
+    #Cryptonight = ' '
     #Sia = ''
     #Yescrypt = ''
     #BlakeVanilla = ''
@@ -14,23 +16,27 @@ $Commands = [PSCustomObject]@{
     #NeoScrypt = ' -i 19'
     MyriadGroestl = ''
     Groestl = ''
+    Keccak = ',d=1024 '
     Keccakc = ''
-    #Bitcore = ' --api-remote --api-allow=0/0'
+    #Bitcore = ' '
     Blake2s = ''
     Sib = ''
+    X16R = ' '
+    X16S = ' '
     X17 = ''
     Quark = ''
-    Hmq1725 = ' --api-remote --api-allow=0/0'
+    Hmq1725 = ',d=128 -i 20 '
     Veltor = ''
     X11evo = ''
-    Timetravel = ' --api-remote --api-allow=0/0'
+    Timetravel = ' '
     Blakecoin = ''
     Lbry = ''
-    Jha = ' --api-remote --api-allow=0/0'
-    Skunk = ' --api-remote --api-allow=0/0'
-    Tribus = ' --api-remote --api-allow=0/0'
-    Phi = ' --api-remote --api-allow=0/0'
-    Hsr = ' --api-remote --api-allow=0/0'
+    Jha = ' '
+    Skunk = ' '
+    Tribus = ' '
+    Phi = ' '
+    Phi2 = ' '
+    Hsr = ' '
     
 }
 
@@ -40,10 +46,10 @@ $Commands | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | 
     [PSCustomObject]@{
         Type = "NVIDIA"
         Path = $Path
-        Arguments = "-b $($Variables.MinerAPITCPPort) -a $_ -o stratum+tcp://$($Pools.(Get-Algorithm($_)).Host):$($Pools.(Get-Algorithm($_)).Port) -u $($Pools.(Get-Algorithm($_)).User) -p $($Pools.(Get-Algorithm($_)).Pass)$($Commands.$_)"
+        Arguments = "-a $_ -o stratum+tcp://$($Pools.(Get-Algorithm($_)).Host):$($Pools.(Get-Algorithm($_)).Port) -u $($Pools.(Get-Algorithm($_)).User) -p $($Pools.(Get-Algorithm($_)).Pass)$($Commands.$_)"
         HashRates = [PSCustomObject]@{(Get-Algorithm($_)) = $Stats."$($Name)_$(Get-Algorithm($_))_HashRate".Live}
         API = "Ccminer"
-        Port = $Variables.MinerAPITCPPort #4068
+        Port = 4068
         Wrap = $false
         URI = $Uri
 		User = $Pools.(Get-Algorithm($_)).User
